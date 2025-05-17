@@ -1,0 +1,9 @@
+47.import numpy as np ;  import pandas as pd;   import warnings warnings.filterwarnings("ignore", category=FutureWarning, module="sklearn") warnings.filterwarnings("ignore", category=UserWarning, module="sklearn") ;;
+data=pd.read_csv("tennis.csv") ;   data.head() ;;   
+outlook=data["outlook"].str.get_dummies(" ") ;temp = data["temp"].str.get_dummies(" ") humidity =data["humidity"].str.get_dummies(" ") play = data["play"].str.get_dummies(" ") windy = pd.get_dummies(data['windy'], drop_first=True)  ;;
+data.drop(["outlook",'temp',"humidity","windy","play"],axis=1, inplace=True);;
+data=pd.concat([outlook,temp,humidity,windy,play] , axis=1) ;   data  ;;  
+from sklearn.model_selection import train_test_split ;   x=data.drop(['yes','no'] , axis=1) ; y=data['no'] ;  X_train, X_test, y_train, y_test = train_test_split(x, y, test_size=0.2,random_state=42) ; X_train.columns = X_train.columns.astype(str) ;X_test.columns = X_test.columns.astype(str) ;;  from sklearn.tree import DecisionTreeClassifier ;   dtc = DecisionTreeClassifier(criterion='entropy'); dtc.fit(X_train, y_train) ;;  pred=dtc.predict(X_test) ;;   
+from sklearn.metrics import classification_report , confusion_matrix,accuracy_score
+print("Accuracy :",accuracy_score(y_test,pred)) ;print("classification_report : ") ;print(classification_report(y_test,pred)) ;      print("confusion_matrix : ") ;
+print(confusion_matrix(y_test,pred));;
